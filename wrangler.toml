@@ -1,0 +1,29 @@
+name = "drop"
+# type = "javascript" is required to use the `[build]` section
+type = "javascript"
+account_id = "20bf2f5d11d26a322e389687896a6601"
+workers_dev = true
+route = "drop.zod.tv/*"
+zone_id = "887c25b8693f1fb21b5a005fc2015396"
+
+[build]
+command = "npm install && npm run build"
+
+[build.upload]
+# The "modules" upload format is required for all projects that export a Durable Object class.
+format = "modules"
+main = "./shim.mjs"
+
+[[build.upload.rules]]
+type = "Text"
+globs = ["**/*.html"]
+
+[durable_objects]
+bindings = [{name = "DROPPER", class_name = "Dropper"}]
+
+[[migrations]]
+tag = "v1" # Should be unique for each entry
+new_classes = ["Dropper"]
+
+[triggers]
+crons = ["* */1 * * *"]
